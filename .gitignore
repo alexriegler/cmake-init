@@ -2,3 +2,12 @@ package/*
 !package/setup.py
 proj/
 cmake-init.pyz
+
+# Python
+.venv/
+
+# IDE
+.vscode/
+
+# Testing
+test-runs/
