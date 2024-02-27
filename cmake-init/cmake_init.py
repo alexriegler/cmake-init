@@ -55,7 +55,7 @@ c_lang = Language("C", ["e", "s", "h"], ["90", "99", "11", "17", "23"], 1)
 cpp_lang = Language(name="C++",
                     types=["e", "h", "s"],
                     options=["11", "14", "17", "20", "23"],
-                    default=2)
+                    default=-1)
 
 
 def not_empty(value):
