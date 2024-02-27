@@ -13,6 +13,17 @@ project(
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
+# ---- Common compiler options
+
+add_library({= name =}_compiler_flags INTERFACE)
+
+set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
+set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
+target_compile_options({= name =}_compiler_flags INTERFACE
+    "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wconversion;-Wsign-conversion;-Wcast-qual;-Wformat=2;-Wundef;-Werror=float-equal;-Wshadow;-Wcast-align;-Wunused;-Wnull-dereference;-Wdouble-promotion;-Wimplicit-fallthrough;-Wextra-semi;-Woverloaded-virtual;-Wnon-virtual-dtor;-Wold-style-cast>>"
+    "$<${msvc_cxx}:$<BUILD_INTERFACE:-utf-8;-w14165;-w44242;-w44254;-w44263;-w34265;-w34287;-w44296;-w44365;-w44388;-w44464;-w14545;-w14546;-w14547;-w14549;-w14555;-w34619;-w34640;-w24826;-w14905;-w14906;-w14928;-w45038;-W4;-permissive-;-volatile:iso;-Zc:preprocessor;-Zc:__cplusplus;-Zc:externConstexpr;-Zc:throwingNew;-EHsc>>"
+)
+
 # ---- Declare library ----
 
 add_library(
@@ -30,6 +41,8 @@ target_compile_features({= name =}_lib PUBLIC cxx_std_{= std =}){% if pm %}
 
 find_package(fmt REQUIRED)
 target_link_libraries({= name =}_lib PRIVATE fmt::fmt){% end %}
+
+target_link_libraries({= name =}_lib PUBLIC {= name =}_compiler_flags)
 
 # ---- Declare executable ----
 
