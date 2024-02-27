@@ -44,6 +44,20 @@ target_link_libraries({= name =}_lib PRIVATE fmt::fmt){% end %}
 
 target_link_libraries({= name =}_lib PUBLIC {= name =}_compiler_flags)
 
+if (MSVC)
+  # HACK: This is a workaround to get STL modules working with MSVC.
+  #       See this post for more info:
+  #       https://gitlab.kitware.com/cmake/cmake/-/issues/24922
+  set_target_properties(
+    {= name =}_lib PROPERTIES
+    VS_GLOBAL_BuildStdModules "true"
+  )
+  set_target_properties(
+    {= name =}_lib PROPERTIES
+    VS_USER_PROPS "${CMAKE_SOURCE_DIR}/experimental/buildstlmodules.props"
+  )
+endif()
+
 # ---- Declare executable ----
 
 add_executable({= name =}_exe source/main.cpp)
@@ -54,6 +68,20 @@ set_property(TARGET {= name =}_exe PROPERTY OUTPUT_NAME {= name =})
 target_compile_features({= name =}_exe PRIVATE cxx_std_{= std =})
 
 target_link_libraries({= name =}_exe PRIVATE {= name =}_lib)
+
+if (MSVC)
+  # HACK: This is a workaround to get STL modules working with MSVC.
+  #       See this post for more info:
+  #       https://gitlab.kitware.com/cmake/cmake/-/issues/24922
+  set_target_properties(
+    {= name =}_exe PROPERTIES
+    VS_GLOBAL_BuildStdModules "true"
+  )
+  set_target_properties(
+    {= name =}_exe PROPERTIES
+    VS_USER_PROPS "${CMAKE_SOURCE_DIR}/experimental/buildstlmodules.props"
+  )
+endif()
 
 # ---- Install rules ----
 

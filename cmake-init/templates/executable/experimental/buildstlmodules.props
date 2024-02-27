@@ -1,0 +1,7 @@
+<Project>
+    <ItemDefinitionGroup>
+        <ClCompile>
+          <BuildStlModules>$(BuildStdModules)</BuildStlModules>
+        </ClCompile>
+    </ItemDefinitionGroup>
+</Project>

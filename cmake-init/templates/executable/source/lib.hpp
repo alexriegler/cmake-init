@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+import std;
 
 /**
  * @brief The core implementation of the executable

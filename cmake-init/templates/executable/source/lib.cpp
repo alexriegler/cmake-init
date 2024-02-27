@@ -1,3 +1,5 @@
+import std;
+
 #include "lib.hpp"{% if pm %}
 
 #include <fmt/core.h>{% end %}
