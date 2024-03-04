@@ -85,15 +85,21 @@ if (MSVC)
     VS_USER_PROPS "${CMAKE_SOURCE_DIR}/experimental/buildstlmodules.props"
   )
 
-  # Correct library module .obj filename (remove .ixx)
+  # HACK: This is a workaround for the .obj filenames produced by modules with MSVC.
+  #       See this issue for more info:
+  #       https://gitlab.kitware.com/cmake/cmake/-/issues/25732
+  # Correct library module .obj filenames (remove .ixx)
   # (Must be done here since object libraries can't have PRE_BUILD commands)
+  find_package(Python)
+
   add_custom_command(
       TARGET {= name =}_exe
       PRE_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy
-              "${{= name =}_lib_obj_wrong_path}"
-              "${{= name =}_lib_obj_correct_path}"
-      COMMENT "Copying and renaming object {= name =}_lib file..."
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_SOURCE_DIR}/experimental/obj_fixer.py"
+              ${PROJECT_BINARY_DIR}
+              {= name =}_lib
+              $<CONFIG>
+      COMMENT "Running python script..."
   )
 endif()
 
