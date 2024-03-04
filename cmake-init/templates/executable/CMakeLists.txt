@@ -50,6 +50,15 @@ if (MSVC)
     {= name =}_lib PROPERTIES
     VS_USER_PROPS "${CMAKE_SOURCE_DIR}/experimental/buildstlmodules.props"
   )
+
+  # Variables for correcting module .obj filename (removing .ixx)
+  set({= name =}_lib_obj_path "$<TARGET_OBJECTS:{= name =}_lib>")
+  set({= name =}_lib_obj_parent_path "$<PATH:GET_PARENT_PATH,${{= name =}_lib_obj_path}>")
+  set({= name =}_lib_obj_file_stem "$<PATH:GET_STEM,${{= name =}_lib_obj_path}>")
+  set({= name =}_lib_obj_file_ext "$<PATH:GET_EXTENSION,${{= name =}_lib_obj_path}>")
+
+  set({= name =}_lib_obj_wrong_path "${{= name =}_lib_obj_parent_path}/${{= name =}_lib_obj_file_stem}.ixx${{= name =}_lib_obj_file_ext}")
+  set({= name =}_lib_obj_correct_path "${{= name =}_lib_obj_parent_path}/${{= name =}_lib_obj_file_stem}${{= name =}_lib_obj_file_ext}")
 endif()
 
 # ---- Declare executable ----
@@ -74,6 +83,17 @@ if (MSVC)
   set_target_properties(
     {= name =}_exe PROPERTIES
     VS_USER_PROPS "${CMAKE_SOURCE_DIR}/experimental/buildstlmodules.props"
+  )
+
+  # Correct library module .obj filename (remove .ixx)
+  # (Must be done here since object libraries can't have PRE_BUILD commands)
+  add_custom_command(
+      TARGET {= name =}_exe
+      PRE_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy
+              "${{= name =}_lib_obj_wrong_path}"
+              "${{= name =}_lib_obj_correct_path}"
+      COMMENT "Copying and renaming object {= name =}_lib file..."
   )
 endif()
 
