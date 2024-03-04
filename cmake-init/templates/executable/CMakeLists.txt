@@ -28,13 +28,7 @@ target_compile_options({= name =}_compiler_flags INTERFACE
 
 add_library(
     {= name =}_lib OBJECT
-    source/lib.cpp
-)
-
-target_include_directories(
-    {= name =}_lib ${warning_guard}
-    PUBLIC
-    "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/source>"
+    source/lib.ixx
 )
 
 target_compile_features({= name =}_lib PUBLIC cxx_std_{= std =}){% if pm %}

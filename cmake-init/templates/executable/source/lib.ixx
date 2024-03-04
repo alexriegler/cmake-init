@@ -1,7 +1,12 @@
-#pragma once
+{% if pm %}module;
+
+#include <fmt/core.h>
+
+{% end %}export module library;
 
 import std;
 
+export {
 /**
  * @brief The core implementation of the executable
  *
@@ -12,10 +17,14 @@ import std;
  */
 struct library
 {
-  /**
-   * @brief Simply initializes the name member to the name of the project
-   */
-  library();
+    /**
+     * @brief Simply initializes the name member to the name of the project
+     */
+    library()
+        : name {{% if pm %}fmt::format("{}", "{= name =}"){% else %}"{= name =}"{% end %}}
+    {
+    }
 
-  std::string name;
+    std::string name;
 };
+}

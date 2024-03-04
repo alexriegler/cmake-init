@@ -1,6 +1,5 @@
+import library;
 import std;
-
-#include "lib.hpp"
 
 auto main() -> int
 {
